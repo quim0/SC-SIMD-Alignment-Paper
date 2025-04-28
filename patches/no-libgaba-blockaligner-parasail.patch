@@ -1,0 +1,190 @@
+diff --git a/tools/align_benchmark/Makefile b/tools/align_benchmark/Makefile
+index 23d4ad5..a516fa4 100644
+--- a/tools/align_benchmark/Makefile
++++ b/tools/align_benchmark/Makefile
+@@ -18,7 +18,7 @@ LIB_WFA=$(FOLDER_LIB)/libwfa.a
+ LIB_EDLIB=external/edlib/build/lib/
+ 
+ # libgaba only supports x86_64
+-ifneq ($(ARCH), aarch64)
++ifneq (1,1)
+   LIB_GABA=external/libgaba/libgaba.a
+   LIB_BLOCKALIGNER=external/block-aligner/c/target/release/
+   BLOCKALIGNER_ARGS=-L$(LIB_BLOCKALIGNER) -Wl,-rpath=$(PWD)/tools/align_benchmark/$(LIB_BLOCKALIGNER) -lblock_aligner_c # BlockAligner
+@@ -28,7 +28,8 @@ else
+   BLOCKALIGNER_ARGS=
+ endif
+ 
+-LIB_PARASAIL=external/parasail/build/libparasail.a
++#LIB_PARASAIL=external/parasail/build/libparasail.a
++LIB_PARASAIL=
+ ###############################################################################
+ # Rules
+ ###############################################################################
+diff --git a/tools/align_benchmark/align_benchmark.c b/tools/align_benchmark/align_benchmark.c
+index 2a013b9..4c724f0 100644
+--- a/tools/align_benchmark/align_benchmark.c
++++ b/tools/align_benchmark/align_benchmark.c
+@@ -468,7 +468,7 @@ void align_benchmark_run_algorithm(
+         benchmark_bitpal_m1_x4_g2(align_input);
+         break;
+ // blockaligner is only supported in x86_64
+-#ifndef __aarch64__
++#if 0
+       case alignment_blockaligner:
+         benchmark_blockaligner_global_affine(
+             align_input,&parameters.affine_penalties,
+@@ -485,7 +485,7 @@ void align_benchmark_run_algorithm(
+         benchmark_edlib(align_input);
+         break;
+ // libgaba is only supported in x86_64
+-#ifndef __aarch64__
++#if 0
+       case alignment_gaba_aband:
+         benchmark_gaba_aband(align_input,&parameters.affine_penalties);
+         break;
+@@ -559,6 +559,7 @@ void align_benchmark_run_algorithm(
+       case alignment_lv89:
+         benchmark_lv89(align_input);
+         break;
++#if 0
+       case alignment_parasail_nw_stripped:
+         benchmark_parasail_nw_stripped(align_input,&parameters.affine_penalties);
+         break;
+@@ -571,6 +572,7 @@ void align_benchmark_run_algorithm(
+       case alignment_parasail_nw_banded:
+         benchmark_parasail_nw_banded(align_input,&parameters.affine_penalties,parameters.bandwidth);
+         break;
++#endif
+       case alignment_scrooge:
+         benchmark_scrooge(align_input);
+         break;
+diff --git a/tools/align_benchmark/align_benchmark_params.c b/tools/align_benchmark/align_benchmark_params.c
+index 922b3fd..a23be43 100644
+--- a/tools/align_benchmark/align_benchmark_params.c
++++ b/tools/align_benchmark/align_benchmark_params.c
+@@ -139,7 +139,7 @@ void usage() {
+       "              bitpal-edit          (Edit)[score-only]                   \n"
+       "              bitpal-scored        (Gap-linear)[score-only]             \n"
+ // blockaligner is only supported in x86_64
+-#ifndef __aarch64__
++#if 0
+       "            [External/BlockAligner]                                     \n"
+       "              block-aligner        (Gap-affine)                         \n"
+ #endif
+@@ -150,7 +150,7 @@ void usage() {
+       "            [External/Edlib]                                            \n"
+       "              edlib                (Edit)                               \n"
+ // libgaba is only supported in x86_64
+-#ifndef __aarch64__
++#if 0
+       "            [External/GABA]                                             \n"
+       "              gaba-aband           (Gap-affine)                         \n"
+ #endif // __aarch64__
+@@ -178,11 +178,13 @@ void usage() {
+ #endif // __aarch64__
+       "            [External/LV89]                                             \n"
+       "              lv89                 (Edit)[score-only]                   \n"
++#if 0
+       "            [External/Parasail]                                         \n"
+       "              parasail-nw-stripped (Gap-affine)                         \n"
+       "              parasail-nw-scan     (Gap-affine)                         \n"
+       "              parasail-nw-diag     (Gap-affine)                         \n"
+       "              parasail-nw-banded   (Gap-affine)[score-only]             \n"
++#endif
+       "            [External/Scrooge]                                          \n"
+       "              scrooge              (Edit)                               \n"
+       "            [External/SeqAn]                                            \n"
+@@ -355,7 +357,7 @@ void parse_arguments(
+       } else if (strcmp(optarg,"bitpal-scored")==0) {
+         parameters.algorithm = alignment_bitpal_scored;
+ // blockaligner is only supported in x86_64
+-#ifndef __aarch64__
++#if 0
+       // External (BlockAligner)
+       } else if (strcmp(optarg,"block-aligner")==0) {
+         parameters.algorithm = alignment_blockaligner;
+@@ -370,7 +372,7 @@ void parse_arguments(
+       } else if (strcmp(optarg,"edlib")==0) {
+         parameters.algorithm = alignment_edlib;
+       // External (Gaba)
+-#ifndef __aarch64__
++#if 0
+       } else if (strcmp(optarg,"gaba-aband")==0) {
+         parameters.algorithm = alignment_gaba_aband;
+ #endif // __aarch64__
+@@ -412,6 +414,7 @@ void parse_arguments(
+       } else if (strcmp(optarg,"lv89")==0) {
+         parameters.algorithm = alignment_lv89;
+       // External (Parasail)
++#if 0
+       } else if (strcmp(optarg,"parasail-nw-stripped")==0) {
+         parameters.algorithm = alignment_parasail_nw_stripped;
+       } else if (strcmp(optarg,"parasail-nw-scan")==0) {
+@@ -420,6 +423,7 @@ void parse_arguments(
+         parameters.algorithm = alignment_parasail_nw_diag;
+       } else if (strcmp(optarg,"parasail-nw-banded")==0) {
+         parameters.algorithm = alignment_parasail_nw_banded;
++#endif
+       // External (Scrooge)
+       } else if (strcmp(optarg,"scrooge")==0) {
+         parameters.algorithm = alignment_scrooge;
+diff --git a/tools/align_benchmark/align_benchmark_params.h b/tools/align_benchmark/align_benchmark_params.h
+index ed2d9c9..4d21bdb 100644
+--- a/tools/align_benchmark/align_benchmark_params.h
++++ b/tools/align_benchmark/align_benchmark_params.h
+@@ -66,14 +66,14 @@ typedef enum {
+   alignment_bitpal_edit,
+   alignment_bitpal_scored,
+ // blockaligner is only supported in x86_64
+-#ifndef __aarch64__
++#if 0
+   alignment_blockaligner,
+ #endif
+   alignment_daligner,
+   alignment_diffutils,
+   alignment_edlib,
+ // libgaba is only supported in x86_64
+-#ifndef __aarch64__
++#if 0
+   alignment_gaba_aband,
+ #endif // __aarch64__
+   alignment_ksw2_extz2_sse,
+@@ -93,10 +93,12 @@ typedef enum {
+   alignment_mmfast_extd2_avx512,
+ #endif
+   alignment_lv89,
++#if 0
+   alignment_parasail_nw_stripped,
+   alignment_parasail_nw_scan,
+   alignment_parasail_nw_diag,
+   alignment_parasail_nw_banded,
++#endif
+   alignment_scrooge,
+   alignment_seqan_edit,
+   alignment_seqan_edit_bpm,
+diff --git a/tools/align_benchmark/external/Makefile b/tools/align_benchmark/external/Makefile
+index 96fabe3..5eea30f 100644
+--- a/tools/align_benchmark/external/Makefile
++++ b/tools/align_benchmark/external/Makefile
+@@ -5,16 +5,16 @@ BUILD_RULES=bitpal_build \
+             daligner_wave_build \
+             edlib_build \
+             ksw2_build \
+-            parasail_build \
+             scrooge_build
++            # parasail_build
+ 
+-CLEAN_RULES=edlib_clean \
+-            parasail_clean
++CLEAN_RULES=edlib_clean
++            #parasail_clean
+ 
+ ARCH := $(shell uname -m)
+ 
+ # libgaba only supports x86_64
+-ifneq ($(ARCH), aarch64)
++ifneq (1,1)
+ 	BUILD_RULES+=blockaligner_build \
+ 				  gaba_build
+ 	CLEAN_RULES+=blockaligner_clean \
