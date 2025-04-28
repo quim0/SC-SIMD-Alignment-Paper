@@ -20,6 +20,7 @@ if [ ! -d $DATASETS_PATH ]; then
 fi
 
 cd WFA2-lib
+make external-clean
 git checkout -- .
 git apply ../patches/no-libgaba-blockaligner-parasail.patch
 #make clean external-clean
@@ -30,7 +31,6 @@ find wavefront/ -type f -exec sed -i 's/__AVX512VL__/0/g' {} \;
 find wavefront/ -type f -exec sed -i 's/__AVX2__/0/g' {} \;
 
 # Compile the WFA2-lib
-make external-clean
 make clean all
 cd ..
 

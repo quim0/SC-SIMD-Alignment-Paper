@@ -27,6 +27,7 @@ if [ ! -d $DATASETS_PATH ]; then
 fi
 
 cd WFA2-lib
+make external-clean
 git checkout -- .
 # Patch to make it compile faster
 git apply ../patches/no-libgaba-blockaligner-parasail.patch
@@ -37,15 +38,14 @@ find wavefront/ -type f -exec sed -i 's/__AVX512VL__/0/g' {} \;
 find wavefront/ -type f -exec sed -i 's/__AVX2__/1/g' {} \;
 
 # Compile the WFA2-lib
-make external-clean
 make clean all
 cd ..
 
 if [ ! -f "WFA2-lib/bin/align_benchmark" ]; then
     echo "[!] Compilation failed."
     # Restore the original files
-    #cd WFA2-lib
-    #git checkout -- .
+    cd WFA2-lib
+    git checkout -- .
     exit 1
 fi
 
