@@ -19,4 +19,4 @@ gzip -d datasets/*.seq.gz
 │   ├── ksw2 # Directory containing the scripts to run the KSW2 experiments
 ```
 
-The results of the executions are saved in the `results` directory.
+The results of the executions are saved in the `results` directory. Note that the output of the benchmarks is on the stderr.
