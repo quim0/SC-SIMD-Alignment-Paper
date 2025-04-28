@@ -1,0 +1,5 @@
+venv/
+results/
+datasets/*.seq
+*.png
+*.pdf
