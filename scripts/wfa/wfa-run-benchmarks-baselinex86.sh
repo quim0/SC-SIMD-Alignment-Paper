@@ -20,6 +20,7 @@ if [ ! -d $DATASETS_PATH ]; then
 fi
 
 cd WFA2-lib
+git checkout benchmark
 make external-clean
 git checkout -- .
 git apply ../patches/no-libgaba-blockaligner-parasail.patch

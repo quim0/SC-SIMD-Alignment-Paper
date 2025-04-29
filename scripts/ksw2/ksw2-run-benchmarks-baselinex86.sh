@@ -1,5 +1,3 @@
-# Get all the .seq files in $DATASETS_PATH and run the benchmarks on them
-# Output: The results of the benchmarks are stored in the ./results/ directory
 
 SCRIPT_PATH=$(dirname $(realpath -s $0))/../../
 cd $SCRIPT_PATH
@@ -27,6 +25,7 @@ if [ ! -d $DATASETS_PATH ]; then
 fi
 
 cd WFA2-lib
+git checkout benchmark
 make external-clean
 git checkout -- .
 # Patch to make it compile faster
